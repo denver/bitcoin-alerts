@@ -1,0 +1,40 @@
+{
+  "name": "bitcoin-alerts",
+  "version": "1.0.0",
+  "description": "bitcoin-alerts via sms",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denver/bitcoin-alerts.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "btc",
+    "eth",
+    "ltc"
+  ],
+  "author": "denver",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/denver/bitcoin-alerts/issues"
+  },
+  "homepage": "https://github.com/denver/bitcoin-alerts#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cron": "^1.3.0",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "forever": "^0.15.3",
+    "mongoose": "^4.13.8",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.4.0",
+    "request": "^2.83.0",
+    "twilio": "^3.11.0"
+  }
+}
