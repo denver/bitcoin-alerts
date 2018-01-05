@@ -8,6 +8,9 @@ var express         = require('express'),
     request         = require('request'),
     client          = require('twilio')( process.env.TWILIOSID,process.env.TWILIOAUTHTOKEN);
 
+// routes
+var coinRoutes      = require("./routes/coins");
+
 mongoose.connect("mongodb://localhost/bitcoin_alerts",{useMongoClient: true});
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -23,13 +26,14 @@ app.use(require("express-session")({
 
 app.use(passport.initialize());
 app.use(passport.session());
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
 
 app.get("/",function(req, res){
   res.render("landing");
 });
+
+// app.get("/coins",function(req,res){
+//   res.render("coins");
+// });
 
 app.post("/btc", function(req, res){
   var self = req.body;
@@ -68,6 +72,8 @@ app.post("/btc", function(req, res){
     }
   });
 })
+
+app.use("/coins", coinRoutes);
 
 app.listen(process.env.PORT || 3000,function(){
   console.log('bitcoin-alerts server started');
