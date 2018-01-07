@@ -6,18 +6,22 @@ var express         = require('express'),
     LocalStrategy   = require('passport-local'),
     twilio          = require('twilio'),
     request         = require('request'),
+    Alert           = require('./models/alert'),
+    User            = require("./models/user"),
     client          = require('twilio')( process.env.TWILIOSID,process.env.TWILIOAUTHTOKEN);
 
 // routes
 var coinRoutes      = require("./routes/coins");
 
-mongoose.connect("mongodb://localhost/bitcoin_alerts",{useMongoClient: true});
+var dbUrl = process.env.DATABASEURL || "mongodb://localhost/bitcoin_alerts";
+mongoose.connect(dbUrl,{useMongoClient: true});
+
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(__dirname + "/public"));
 
-// passport config
+
 app.use(require("express-session")({
   secret: "What's the price of bitcoin now now",
   resave: false,
@@ -30,10 +34,6 @@ app.use(passport.session());
 app.get("/",function(req, res){
   res.render("landing");
 });
-
-// app.get("/coins",function(req,res){
-//   res.render("coins");
-// });
 
 app.post("/btc", function(req, res){
   var self = req.body;
@@ -72,6 +72,37 @@ app.post("/btc", function(req, res){
     }
   });
 })
+
+app.get("/signup",function(req,res){
+  res.render("signup");
+})
+
+//signup
+app.post("/signup", function(req,res){
+  var newUser = new User({username: req.body.username, phone: req.body.phone});
+  User.register(newUser, req.body.password, function(err, user){
+    if(err){
+      // req.flash("error", err.message);
+      return res.render('signup');
+    }
+    passport.authenticate("local")(req,res,function(){
+      // req.flash("success", "Welcome to YelpCamp " + user.username);
+      res.redirect("/coins");
+    });
+  });
+});
+
+//Login
+app.get("/login", function(req,res){
+  res.render("login");
+});
+//handling login logic
+app.post("/login", passport.authenticate("local",
+ {
+   successRedirect: "/campgrounds",
+   failureRedirect: "/login"
+ }),function(req,res){
+});
 
 app.use("/coins", coinRoutes);
 
