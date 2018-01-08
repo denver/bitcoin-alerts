@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
+var passportLocalMongoose = require("passport-local-mongoose");
 
-var alertSchema = new mongoose.Schema({
+var AlertSchema = new mongoose.Schema({
   name: String,
   type: String,
+  image: String,
   description: String,
   user: {
     id: {
@@ -12,4 +14,6 @@ var alertSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Alert", alertSchema);
+AlertSchema.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model("Alert", AlertSchema);

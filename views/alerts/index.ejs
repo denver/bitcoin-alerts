@@ -1,0 +1,31 @@
+<% include ../partials/header %>
+<div class="container">
+  <header class="jumbotron">
+    <div class="container">
+      <h1>Welcome to Bitcoin-Alerts</h1>
+      <p>Receive sms price alerts for Bitcoin & your favorite coins</p>
+      <p>
+        <a class="btn btn-primary btn-large" href="/alerts/new">Create a new alert</a>
+      </p>
+    </div>
+  </header>
+
+  <div class="row" style="display:flex; flex-wrap: wrap;">
+    <% alerts.forEach(function(alerts){ %>
+      <div class="col-md-3 col-sm-6">
+        <div class="thumbnail">
+          <img src="<%= alerts.image %>">
+        <div class="caption text-center">
+        <h4><%= alerts.name %></h4>
+        <p>
+          <a href="/alerts/<%= alerts._id %>" class="btn btn-primary">More Info</a>
+        </p>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+    </div>
+  </div>
+
+
+<% include ../partials/footer %>

@@ -9,9 +9,11 @@ var express         = require('express'),
     Alert           = require('./models/alert'),
     User            = require("./models/user"),
     client          = require('twilio')( process.env.TWILIOSID,process.env.TWILIOAUTHTOKEN);
+    seedDB          = require('./seeds');
 
 // routes
-var coinRoutes      = require("./routes/coins");
+var alertRoutes      = require("./routes/alerts");
+
 
 var dbUrl = process.env.DATABASEURL || "mongodb://localhost/bitcoin_alerts";
 mongoose.connect(dbUrl,{useMongoClient: true});
@@ -79,6 +81,15 @@ app.get("/signup",function(req,res){
 
 //signup
 app.post("/signup", function(req,res){
+
+  client.messages.create({
+  to: req.body.phone,
+  from: process.env.TWILIOPHONE,
+  body: 'Welcome to Bitcoin-Alerts!\nType Bitcoin or "BTC"\nEthereum or "ETH"\nLitecoin or "LTC"\nTo receive current price',
+  },function(err,message){
+    console.log(err);
+  });
+
   var newUser = new User({username: req.body.username, phone: req.body.phone});
   User.register(newUser, req.body.password, function(err, user){
     if(err){
@@ -87,7 +98,7 @@ app.post("/signup", function(req,res){
     }
     passport.authenticate("local")(req,res,function(){
       // req.flash("success", "Welcome to YelpCamp " + user.username);
-      res.redirect("/coins");
+      res.redirect("/alerts");
     });
   });
 });
@@ -104,7 +115,7 @@ app.post("/login", passport.authenticate("local",
  }),function(req,res){
 });
 
-app.use("/coins", coinRoutes);
+app.use("/alerts", alertRoutes);
 
 app.listen(process.env.PORT || 3000,function(){
   console.log('bitcoin-alerts server started');
